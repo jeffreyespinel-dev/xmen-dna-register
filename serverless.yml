@@ -1,0 +1,40 @@
+service: x-men-register
+
+plugins:
+  - serverless-offline
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+  stage: dev
+  lambdaHashingVersion: 20201221
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:Query
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:CreateTable
+          Resource: '*'
+
+functions:
+  addEvent:
+    handler: functions/mutant.addMutant
+    events:
+      - http:
+          path: api/mutant
+          method: post
+          cors: true
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+    useChildProcesses: true
